@@ -5,6 +5,7 @@ let totalPairs = 0;
 let clicks = 0;
 let timer;
 let timeLeft;
+let secondsPassed = 0;
 
 const setup = () => {
   let firstCard, secondCard;
@@ -64,11 +65,13 @@ const startGame = async () => {
   totalPairs = numPairs;
   matches = 0;
   clicks = 0;
+  secondsPassed = 0;
   $("#total").text(numPairs);
   $("#matches").text(matches);
   $("#left").text(numPairs);
   $("#clicks").text(clicks);
   $("#timer").text(timeLimit);
+  $("#time").text(secondsPassed);
   timeLeft = timeLimit;
 
   // Fetch random Pokémon
@@ -89,7 +92,8 @@ const startGame = async () => {
   clearInterval(timer);
   timer = setInterval(() => {
     timeLeft--;
-    $("#time").text(timeLeft);
+    secondsPassed++;
+    $("#time").text(secondsPassed);
     if (timeLeft <= 0) {
       clearInterval(timer);
       alert("Time's up! Game over.");
@@ -115,7 +119,6 @@ const getRandomPokemonImages = async (numPairs) => {
   const pokemonData = await Promise.all(promises);
   return pokemonData.map(pokemon => pokemon.sprites.other["official-artwork"].front_default);
 };
-
 
 const generateGameGrid = (images) => {
   const gameGrid = $("#game_grid");
