@@ -6,12 +6,27 @@ let clicks = 0;
 let timer;
 let timeLeft;
 let secondsPassed = 0;
+let powerUpProbability = 0.1; // 10% chance to get a power-up on each click
+let isFlipping = false;
+
+// Load saved theme from local storage
+const loadTheme = () => {
+  const theme = localStorage.getItem('theme');
+  if (theme) {
+    $('body').addClass(theme);
+  }
+};
+
+// Save theme to local storage
+const saveTheme = (theme) => {
+  localStorage.setItem('theme', theme);
+};
 
 const setup = () => {
   let firstCard, secondCard;
 
   $(".card").on("click", function () {
-    if (!$(this).hasClass("flip") && !$(this).hasClass("matched")) {
+    if (!$(this).hasClass("flip") && !$(this).hasClass("matched") && !isFlipping) {
       clicks++;
       $("#clicks").text(clicks);
       $(this).toggleClass("flip");
@@ -20,6 +35,7 @@ const setup = () => {
         firstCard = $(this).find(".front_face")[0];
       } else {
         secondCard = $(this).find(".front_face")[0];
+        isFlipping = true;
         if (firstCard.src === secondCard.src) {
           matches++;
           $("#matches").text(matches);
@@ -28,6 +44,7 @@ const setup = () => {
           $(`#${secondCard.id}`).parent().off("click").addClass("matched");
           firstCard = undefined;
           secondCard = undefined;
+          isFlipping = false;
           if (matches === totalPairs) {
             clearInterval(timer);
             setTimeout(() => {
@@ -40,11 +57,25 @@ const setup = () => {
             $(`#${secondCard.id}`).parent().toggleClass("flip");
             firstCard = undefined;
             secondCard = undefined;
+            isFlipping = false;
           }, 1000);
         }
       }
+
+      // Check for power-up after each click
+      checkForPowerUp();
     }
   });
+};
+
+const checkForPowerUp = () => {
+  if (Math.random() < powerUpProbability) {
+    alert("Power Up! All cards will flip for a second.");
+    $(".card").addClass("flip");
+    setTimeout(() => {
+      $(".card").removeClass("flip");
+    }, 1000);
+  }
 };
 
 const startGame = async () => {
@@ -161,13 +192,17 @@ const shuffleArray = (array) => {
 };
 
 $(document).ready(function() {
+  loadTheme();
+
   $('#start').click(startGame);
 
   $('#dark').click(function() {
-    $('body').addClass('dark-theme');
+    $('body').removeClass('light-theme').addClass('dark-theme');
+    saveTheme('dark-theme');
   });
 
   $('#light').click(function() {
-    $('body').removeClass('dark-theme');
+    $('body').removeClass('dark-theme').addClass('light-theme');
+    saveTheme('light-theme');
   });
 });
