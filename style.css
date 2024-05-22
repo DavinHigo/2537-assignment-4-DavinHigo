@@ -4,25 +4,23 @@ body {
 
 #game_grid {
   border: 2px tomato solid;
-  width: 600px;
-  height: 400px;
   margin: auto;
   display: flex;
   flex-wrap: wrap;
 }
 
-
 .card {
-  width: 33.3%;
+  width: 200px;
+  height: 200px;
   position: relative;
   transition: transform 1s;
   perspective: 1000px;
   transform-style: preserve-3d;
 }
 
-
 img {
-  width: 100%
+  width: 100%;
+  height: 100%;
 }
 
 .front_face,
@@ -31,11 +29,9 @@ img {
   backface-visibility: hidden;
 }
 
-
 .flip {
   transform: rotateY(180deg);
 }
-
 
 .front_face {
   transform: rotateY(180deg);
@@ -157,4 +153,20 @@ body.dark-theme .btn-dark {
 
 body.dark-theme .btn-dark:hover {
   background-color: #111;
+}
+
+/* Difficulty specific grid sizes */
+.easy #game_grid {
+  width: 600px;
+  height: 400px;
+}
+
+.medium #game_grid {
+  width: 800px;
+  height: 600px;
+}
+
+.hard #game_grid {
+  width: 1200px;
+  height: 800px;
 }

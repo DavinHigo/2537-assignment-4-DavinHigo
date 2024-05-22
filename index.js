@@ -51,15 +51,21 @@ const startGame = async () => {
   let difficulty = $('input[name="options"]:checked').val();
   let numPairs, timeLimit;
 
+  // Remove existing difficulty class
+  $('body').removeClass('easy medium hard');
+
   if (difficulty === "easy") {
     numPairs = 3;
     timeLimit = 100;
+    $('body').addClass('easy');
   } else if (difficulty === "medium") {
     numPairs = 6;
-    timeLimit = 80;
+    timeLimit = 200;
+    $('body').addClass('medium');
   } else if (difficulty === "hard") {
-    numPairs = 10;
-    timeLimit = 60;
+    numPairs = 12;
+    timeLimit = 300;
+    $('body').addClass('hard');
   }
 
   totalPairs = numPairs;
@@ -131,6 +137,18 @@ const generateGameGrid = (images) => {
       </div>
     `;
     gameGrid.append(card);
+  });
+
+  $(".card").css({
+    width: '200px',
+    height: '200px',
+    perspective: '1000px'
+  });
+
+  $(".card img").css({
+    width: '100%',
+    height: '100%',
+    backfaceVisibility: 'hidden'
   });
 };
 
