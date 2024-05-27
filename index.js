@@ -8,6 +8,7 @@ let timeLeft;
 let secondsPassed = 0;
 let powerUpProbability = 0.1; // 10% chance to get a power-up on each click
 let isFlipping = false;
+let powerUpActive = false;
 
 // Load saved theme from local storage
 const loadTheme = () => {
@@ -26,7 +27,7 @@ const setup = () => {
   let firstCard, secondCard;
 
   $(".card").on("click", function () {
-    if (!$(this).hasClass("flip") && !$(this).hasClass("matched") && !isFlipping) {
+    if (!$(this).hasClass("flip") && !$(this).hasClass("matched") && !isFlipping && !powerUpActive) {
       clicks++;
       $("#clicks").text(clicks);
       $(this).toggleClass("flip");
@@ -70,10 +71,18 @@ const setup = () => {
 
 const checkForPowerUp = () => {
   if (Math.random() < powerUpProbability) {
-    alert("Power Up! All cards will flip for a second.");
-    $(".card").addClass("flip");
+    powerUpActive = true; // Lock the game state during power-up
+    alert("Power Up! All unmatched cards will flip for a second.");
+    
+    $(".card").each(function () {
+      if (!$(this).hasClass("flip") && !$(this).hasClass("matched")) {
+        $(this).addClass("temp-flip flip");
+      }
+    });
+
     setTimeout(() => {
-      $(".card").removeClass("flip");
+      $(".temp-flip").removeClass("temp-flip flip");
+      powerUpActive = false; // Unlock the game state after power-up
     }, 1000);
   }
 };
